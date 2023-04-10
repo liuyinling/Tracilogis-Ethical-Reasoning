@@ -1,0 +1,61 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2014 Louise A. Dennis and Michael Fisher
+// 
+// This file is part of Gwendolen
+//
+// Gwendolen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// Gwendolen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with Gwendolen if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//----------------------------------------------------------------------------
+
+GWENDOLEN
+
+//------------------------------------Intelligent Supervision System----------------------------------------
+:name: iss
+
+:Initial Beliefs:
+
+fire
+	
+:Initial Goals:
+
+avoid_injuries_damage [achieve]
+
+:Plans:
+
++!avoid_injuries_damage [achieve] : {B fire} <- +.lock, checkEthicalChoices(fireEmergency), -.lock; 
+
++fireEmergency(1):{B fire} <- +!solve_fire_emergency [achieve];
++fireEmergency(2):{B fire} <- +!solve_fire_emergency [achieve];
++fireEmergency(3):{B fire} <- +!solve_fire_emergency [achieve];
++fireEmergency(4):{B fire} <- +!solve_fire_emergency [achieve];
++fireEmergency(5):{B fire} <- +!solve_fire_emergency [achieve];
++fireEmergency(6):{B fire} <- +!solve_fire_emergency [achieve];
+
+
++!solve_fire_emergency [achieve] : {B fire, B fireEmergency(1)} <- +.lock, putIntoStrongbox(data), planRoute(front),  delete(fireEmergency(1)), -.lock; // there may be a problem.
++!solve_fire_emergency [achieve] : {B fire, B fireEmergency(2)} <- +.lock, putIntoStrongbox(data), planRoute(back),   delete(fireEmergency(2)), -.lock;
++!solve_fire_emergency [achieve] : {B fire, B fireEmergency(3)} <- +.lock, putIntoStrongbox(data), planRoute(middle), delete(fireEmergency(3)), -.lock;
++!solve_fire_emergency [achieve] : {B fire, B fireEmergency(4)} <- +.lock, planRoute(front),  delete(fireEmergency(4)),  -.lock;
++!solve_fire_emergency [achieve] : {B fire, B fireEmergency(5)} <- +.lock, planRoute(back),   delete(fireEmergency(5)),  -.lock;
++!solve_fire_emergency [achieve] : {B fire, B fireEmergency(6)} <- +.lock, planRoute(middle), delete(fireEmergency(6)),  -.lock;
+
+
++evacuated:{True} <- +.lock, +solve_fire_emergency, +avoid_injuries_damage, delete(evaluated), repair, .send(prod, :tell, start), .send(prod1, :tell, start), -.lock;
+
+//------------------------------------Intelligent Supervision System----------------------------------------
+
+

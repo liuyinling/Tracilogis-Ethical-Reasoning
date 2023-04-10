@@ -1,0 +1,39 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2015 Louise A. Dennis and Michael Fisher
+//
+// This file is part of the Engineering Autonomous Space Software (EASS) Library.
+// 
+// The EASS Library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// The EASS Library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with the EASS Library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//
+//----------------------------------------------------------------------------
+1: (I(iss,avoid_injuries_damage) -> <> B(iss, solve_fire_emergency))
+2: ((B(iss, e(avoidWorkersInjured,3,1)) & B(iss, e(avoidWorkersDied,10,1)) & B(iss, e(avoidHugeDamage,10,0.6)) & B(iss, e(avoidMediumDamage,2,1)) & B(iss, e(avoidLossOfEscapingTime,3,1))) 
+       -> <> (D(iss, delete(fireEmergency(1)))))
+3: ((B(iss, e(avoidWorkersInjured,3,1)) & B(iss, e(avoidWorkersDied,10,1)) & B(iss, e(avoidHugeDamage,10,0.4)) & B(iss, e(avoidMediumDamage,2,1)) & B(iss, e(avoidLossOfEscapingTime,3,1))) 
+       -> <> (D(iss, delete(fireEmergency(4)))))
+4: [] (B(iss, fire) -> ~ B(prod, start))
+5: [] ( ~ B(prod, pos(10,2)))
+6: I(prod, product) -> <> G(AS1, processUp(_,_))
+7: <> ItD(prod, move(prod,7,2))
+8: <> ( B(prod, pos(1,3)))
+
+
+
+
+
+

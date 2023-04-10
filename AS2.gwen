@@ -1,0 +1,52 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2014 Louise A. Dennis and Michael Fisher
+// 
+// This file is part of Gwendolen
+//
+// Gwendolen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// Gwendolen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with Gwendolen if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//----------------------------------------------------------------------------
+
+GWENDOLEN
+
+
+//------------------------------------AS2----------------------------------------
+:name: AS2
+
+:Initial Beliefs:
+Unblocked
+:Initial Goals:
+
+
+:Plans:
+
++.received(:perform, G): {True} <- +!G [perform];
+
++!processDown(Ag,T2) [perform] : {B Unblocked} <- +.lock, -Unblocked, check(Ag,T2), +ag(Ag), -.lock;
+
++.received(:tell, B): {True} <- +B;
++checked:{B ag(Ag)} <- +.lock, +!go(Ag)[perform], delete(checked), -ag(Ag), +Unblocked, -.lock;
+
++!go(Ag)[perform]: {B Drill}  <- +.lock, move(Ag,4,4), delete(Drill),  -.lock;
++!go(Ag)[perform]: {B Groove} <- +.lock, move(Ag,4,4), delete(Groove), -.lock;
++!go(Ag)[perform]: {B No}     <- +.lock, move(Ag,6,3), move(Ag,7,3), delete(No), -.lock;
+
++!processDown(Ag,T2) [perform] : {~ B Unblocked} <- .send(Ag,:tell,failureAS2);
+
+//------------------------------------AS2----------------------------------------
+
+

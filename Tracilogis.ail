@@ -1,0 +1,101 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2014 Louise A. Dennis, and Michael Fisher.
+// 
+// This file is part of Gwendolen
+//
+// Gwendolen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// Gwendolen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with Gwendolen if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//----------------------------------------------------------------------------
+
+mas.agent.1.file = /src/tracilogis/version11/prod.gwen
+mas.agent.1.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.1.name = prod
+
+mas.agent.2.file = /src/tracilogis/version11/prod1.gwen
+mas.agent.2.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.2.name = prod1
+
+mas.agent.3.file = /src/tracilogis/version11/AS0.gwen
+mas.agent.3.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.3.name = as0
+
+mas.agent.4.file = /src/tracilogis/version11/AS1.gwen
+mas.agent.4.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.4.name = AS1
+
+mas.agent.5.file = /src/tracilogis/version11/AS2.gwen
+mas.agent.5.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.5.name = AS2
+
+//mas.agent.6.file = /src/tracilogis/version11/AS3.gwen
+//mas.agent.6.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.6.name = AS3
+
+//mas.agent.7.file = /src/tracilogis/version11/BS0.gwen
+//mas.agent.7.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.7.name = BSO
+
+//mas.agent.8.file = /src/tracilogis/version11/BS1.gwen
+//mas.agent.8.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.8.name = BS1
+
+mas.agent.6.file = /src/tracilogis/version11/M1.gwen
+mas.agent.6.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.6.name = M1
+
+mas.agent.7.file = /src/tracilogis/version11/M2.gwen
+mas.agent.7.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.7.name = M2
+
+mas.agent.8.file = /src/tracilogis/version11/Mq1.gwen
+mas.agent.8.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.8.name = Mq1
+
+mas.agent.9.file = /src/tracilogis/version11/Mq2.gwen
+mas.agent.9.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.9.name = Mq2
+
+mas.agent.10.file = /src/tracilogis/version11/checkPos.gwen
+mas.agent.10.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.10.name = checkP
+
+mas.agent.11.file = /src/tracilogis/version11/IntelligentSupervisionSystem.gwen
+mas.agent.11.builder = gwendolen.GwendolenAgentBuilder
+mas.agent.11.name = iss
+
+//mas.agent.13.file = /src/tracilogis/version11/X1.gwen
+//mas.agent.13.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.13.name = X1
+
+//mas.agent.14.file = /src/tracilogis/version11/X2.gwen
+//mas.agent.14.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.14.name = X2
+
+//mas.agent.15.file = /src/tracilogis/version11/X3.gwen
+//mas.agent.15.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.15.name = X3
+
+//mas.agent.16.file = /src/tracilogis/version11/X4.gwen
+//mas.agent.16.builder = gwendolen.GwendolenAgentBuilder
+//mas.agent.16.name = X4
+
+mas.builder = gwendolen.GwendolenMASBuilder
+
+env = version11.TracilogisEnv
+
+log.info = ail.mas.DefaultEnvironment
+log.format = brief

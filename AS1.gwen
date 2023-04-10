@@ -1,0 +1,46 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2014 Louise A. Dennis and Michael Fisher
+// 
+// This file is part of Gwendolen
+//
+// Gwendolen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// Gwendolen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with Gwendolen if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//----------------------------------------------------------------------------
+
+//------------------------------------AS1----------------------------------------
+:name: AS1
+
+:Initial Beliefs:
+Unblocked
+
+:Initial Goals:
+
+
+:Plans:
+
++.received(:perform, G): {True} <- +!G [perform];
+//adding "*checked" is to ensure that AS1 gets one of "B Drill", "B Groove", "B No".
+//+!processUp(Ag,T1) [perform] : {B Unblocked} <- +.lock, -Unblocked, check(Ag,T1), *checked, +!go(Ag)[perform], delete(checked), +Unblocked, -.lock;
++!processUp(Ag,T1) [perform] : {B Unblocked} <- +.lock, -Unblocked, check(Ag,T1), -.lock, *checked,  +!go(Ag)[perform], delete(checked), +Unblocked;
+		
++!go(Ag)[perform]: {B Drill}  <- +.lock, move(Ag,2,3), move(Ag,3,2), delete(Drill), -.lock;
++!go(Ag)[perform]: {B Groove} <- +.lock, move(Ag,2,3), move(Ag,3,2), delete(Groove), -.lock;
++!go(Ag)[perform]: {B No}     <- +.lock, move(Ag,2,3), move(Ag,4,3), delete(No), -.lock;
+
++!processUp(Ag,T1) [perform] : {~ B Unblocked} <- +.lock, .send(Ag,:tell,failureAS1), -.lock;
+//------------------------------------AS1----------------------------------------
+

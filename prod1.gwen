@@ -1,0 +1,141 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2014 Louise A. Dennis and Michael Fisher
+// 
+// This file is part of Gwendolen
+//
+// Gwendolen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// Gwendolen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with Gwendolen if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//----------------------------------------------------------------------------
+
+GWENDOLEN
+
+//------------------------------------prod1--------------------------------------
+:name: prod1
+
+:Initial Beliefs:
+
+pos(0,3)
+config(2,2,1,1,1,1)
+
+wait
+
+:Initial Goals:
+
+product [achieve] 
+
+:Plans:
+
++!product[achieve]: {B config(T1,T2,A1,A2,A3,A4)} <- *start, +!processAS0[perform], *pos(1,3), +!processAS1 [perform], +product;
+
++!processAS0[perform]: {True} <- .send(as0, :perform, moveTo13(prod1));
++.received(:tell, B): {B pos(0,3)} <- +B;
++failureAS0:{True} <- +.lock, +!processAS0 [perform], -failureAS0, -.lock;	
+
+//The first time the product passes pos(1,3)
+//we have to ensure that the product will arrive at pos(3,2) or pos(4,3);
++!processAS1 [perform]: {B config(T1,T2,A1,A2,A3,A4), ~B SuccessMq1, B pos(1,3)}	<- .send(AS1, :perform, processUp(prod1,T1));	
+
++.received(:tell, B): {B pos(1,3)} <- +B;
++failureAS1:{B pos(1,3)} <- +.lock, +!processAS1 [perform], -failureAS1, -.lock;
+
+
+//The second time the product passes pos(1,3)									
+//If there is an error in Mq1, then the product will re-pass Mq1;
+//Otherwise, it will go to pos(4,3).
++pos(1,3):{B config(T1,T2,A1,A2,A3,A4),  B ErrorMq1}                   <- +!processAS1 [perform];
++pos(1,3):{B config(T1,T2,A1,A2,A3,A4),  B SuccessMq1}                 <- +.lock, move(prod1,2,3),  move(prod1,4,3), -.lock;
++pos(1,3):{B config(T1,T2,A1,A2,A3,A4),  B SuccessMq2}                 <- +.lock, move(prod1,2,3),  move(prod1,4,3), -.lock;
++pos(1,3):{B config(T1,T2,A1,A2,A3,A4),  B ErrorMq2}                   <- +.lock, move(prod1,2,3),  move(prod1,4,3), -.lock;
++pos(1,3):{B config(T1,T2,A1,A2,A3,A4),  B SuccessMq1, B SuccessMq2}   <- +.lock, move(prod1,2,3),  move(prod1,4,3), move(prod1,5,3), move(prod1,6,3), move(prod1,7,3), -.lock;
+
+//Do machining in Mq1
++pos(3,2):{B Drill,  ~ B SuccessMq1} <- +!processMq1Drill [perform];
++pos(3,2):{B Groove, ~ B SuccessMq1} <- +!processMq1Groove [perform];
+
++.received(:tell, B): {B pos(3,2)} <- +B;
+
++!processMq1Drill [perform]:  {B Drill,  ~ B SuccessMq1} <- .send(Mq1, :perform, drill_product(prod1));
++failureMq1Drill:{True} <- +.lock, +!processMq1Drill [perform], -failureMq1Drill, -.lock;
+
++!processMq1Groove [perform]: {B Groove, ~ B SuccessMq1} <- .send(Mq1, :perform, groove_product(prod1));
++failureMq1Groove:{True} <- +.lock, +!processMq1Groove [perform], -failureMq1Groove, -.lock;
+
++pos(4,3):{B config(T1,T2,A1,A2,A3,A4),   B ErrorMq1}                                   <- move(prod1,5,3),  move(prod1,4,4), move(prod1,2,4), move(prod1,1,3);
+
++pos(4,3):{B config(T1,T2,A1,A2,A3,A4), ~ B ErrorMq1,  ~ B SuccessMq1, ~ B SuccessMq2}  <- move(prod1,5,3), +!processAS2 [perform];
++pos(4,3):{B config(T1,T2,A1,A2,A3,A4),   B SuccessMq1,  B ErrorMq2}                    <- move(prod1,5,3), +!processAS2 [perform];
++pos(4,3):{B config(T1,T2,A1,A2,A3,A4),   B SuccessMq1,~ B ErrorMq2,   ~ B SuccessMq2}  <- move(prod1,5,3), +!processAS2 [perform];
++pos(4,3):{B config(T1,T2,A1,A2,A3,A4),   B SuccessMq1,  B SuccessMq2}                  <- +.lock, move(prod1,5,3),  move(prod1,6,3), move(prod1,7,3), -.lock;
++pos(4,3):{B config(T1,T2,A1,A2,A3,A4), ~ B SuccessMq1,~ B ErrorMq1,     B SuccessMq2}  <- +.lock, move(prod1,5,3),  move(prod1,6,3), move(prod1,7,3), -.lock;
+
+
++!processAS2 [perform] : {B config(T1,T2,A1,A2,A3,A4), B pos(5,3)} <- .send(AS2, :perform, processDown(prod1,T2));
++.received(:tell, B): {B pos(5,3)} <- +B;
++failureAS2:{B pos(5,3)} <- +.lock, +!processAS2 [perform], -failureAS2, -.lock;
+
++pos(4,4):{~ B ErrorMq1} <- move(prod1,3,5);
+
++pos(3,5):{B Drill,  ~ B SuccessMq2} <- +!processMq2Drill [perform];
++pos(3,5):{B Groove, ~ B SuccessMq2} <- +!processMq2Groove [perform];
+
++.received(:tell, B): {B pos(3,5)} <- +B;
+
++!processMq2Drill [perform]:  {B Drill,  ~ B SuccessMq2} <- .send(Mq2, :perform, drill_product(prod1));
++failureMq2Drill:{True} <- +!processMq2Drill [perform], -failureMq2Drill;
+
++!processMq2Groove [perform]: {B Groove, ~ B SuccessMq2} <- .send(Mq2, :perform, groove_product(prod1));
++failureMq2Groove:{True} <- +!processMq2Groove [perform], -failureMq2Groove;
+
+
++pos(7,3):{B wait} <- move(prod1,6,4), move(prod1,6,3), -wait, move(prod1,7,3);
++pos(7,3):{B config(T1,T2,A1,A2,A3,A4), ~ B wait} <- move(prod1,8,3), +!processM1[perform];
+
+//added
++!processM1 [perform]: {B config(T1,T2,A1,A2,A3,A4), ~ B wait, B pos(8,3)} <- .send(M1, :perform, putLeftFirst(prod1,A1,A2));
++.received(:tell, B): {B pos(8,3)} <- +B;
++failureM1First:{True} <- +!processM1 [perform], -failureM1First;
+
+
++pos(9,3):{B config(T1,T2,A1,A2,A3,A4), ~ B ErrorM2, ~ B SuccessM2} <- move(prod1,9,2), +!processM2 [perform];
++pos(9,3):{B config(T1,T2,A1,A2,A3,A4),   B ErrorM1} <- move(prod1,9,2), +!processM2 [perform];
++pos(9,3):{B config(T1,T2,A1,A2,A3,A4),   B ErrorM2} <- move(prod1,9,2), +!processM2 [perform];
++pos(9,3):{B config(T1,T2,A1,A2,A3,A4),   B SuccessM2} <- move(prod1,9,2), move(prod1,8,1), move(prod1,8,2);
+
+
++!processM11 [perform]: {B config(T1,T2,A1,A2,A3,A4), B ErrorM1, B pos(8,3)} <- .send(M1, :perform, putLeftSecond(prod1,A1,A2));	
++failureM1Second:{True} <- +!processM11 [perform], -failureM1Second;
+
+
++!processM2 [perform]: {B config(T1,T2,A1,A2,A3,A4)} <- .send(M2, :perform, putRightFirst(prod1,A3,A4));
+
++.received(:tell, B): {B pos(9,2)} <- +B;
++.received(:tell, B): {B pos(8,2)} <- +B;
++failureM2First:{B pos(9,2), ~ B ErrorM2, ~ B SuccessM2} <- +!processM2 [perform], -failureM2First;
++failureM2First:{B pos(9,2),   B ErrorM1}                <- +!processM2 [perform], -failureM2First;
++failureM2First:{B pos(9,2),   B ErrorM2}                <- +!processM2 [perform], -failureM2First;
++failureM2First:{B pos(9,2), ~ B ErrorM1,   B ErrorM2}   <- +!processM2 [perform], -failureM2First;
+
++pos(8,2):{B config(T1,T2,A1,A2,A3,A4), ~ B ErrorM1,   B ErrorM2}   <-  move(prod1,8,3), move(prod1,9,3), move(prod1,9,2), +!processM2 [perform];
++pos(8,2):{B config(T1,T2,A1,A2,A3,A4),   B ErrorM1,   B SuccessM2} <-  move(prod1,8,3), +!processM11 [perform];
++pos(8,2):{B config(T1,T2,A1,A2,A3,A4),   B ErrorM1,   B ErrorM2}   <-  move(prod1,8,3), +!processM11 [perform];
++pos(8,2):{B config(T1,T2,A1,A2,A3,A4),   B ErrorM1,   B SuccessM2} <- +!processM2 [perform];
++pos(8,2):{B config(T1,T2,A1,A2,A3,A4), ~ B ErrorM1, ~ B ErrorM2}   <-  move(prod1,7,2);
++pos(8,2):{B config(T1,T2,A1,A2,A3,A4),   B SuccessM1, B SuccessM2} <-  move(prod1,7,2);
+
+
+
+//------------------------------------prod1--------------------------------------

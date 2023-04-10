@@ -1,0 +1,51 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2014 Louise A. Dennis and Michael Fisher
+// 
+// This file is part of Gwendolen
+//
+// Gwendolen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+// 
+// Gwendolen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with Gwendolen if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// 
+// To contact the authors:
+// http://www.csc.liv.ac.uk/~lad
+//----------------------------------------------------------------------------
+
+GWENDOLEN
+
+//------------------------------------AS0----------------------------------------
+:name: as0
+
+:Initial Beliefs:
+Unblocked
+
+:Initial Goals:
+
+:Plans:
+
++.received(:perform, G): {True} <- +!G [perform];
++!moveTo13(Ag) [perform] : {  B Unblocked} <- +.lock, -Unblocked, +checking, +ag(Ag), .send(checkP, :perform, check_pos(as0,Ag,1,3)), -.lock;
++!moveTo13(Ag) [perform] : {~ B Unblocked} <- +.lock, .send(Ag,:tell,failureAS0), -.lock;
+
+//+!checkPos(Ag1,Ag2,X,Y) [perform]: {B checking} <- .send(checkP, :perform, check_pos(Ag1,Ag2,X,Y));
+
++.received(:tell, B): {True} <- +B;
++posV:{B ag(Ag), B checking} <- +.lock, move(Ag,1,3), -ag(Ag), -checking, +Unblocked, -posV, -.lock;
++failureCheckPos:{B ag(Ag)}  <- +.lock, .send(checkP, :perform, check_pos(as0,Ag,1,3)), -failureCheckPos, -.lock;
+
+
+
+
+//------------------------------------AS0----------------------------------------
+
+
